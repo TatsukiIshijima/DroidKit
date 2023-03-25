@@ -12,6 +12,7 @@ import com.tatsuki.droidkit.common.DroidBLE
 import com.tatsuki.droidkit.common.DroidBLE.isReadyBle
 import com.tatsuki.droidkit.event.ScanEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -30,6 +31,9 @@ class DroidScannerImpl(
 
   @SuppressLint("MissingPermission")
   override fun startScan(timeout: Long): Flow<ScanEvent> = callbackFlow<ScanEvent> {
+
+    var timeoutJob: Job? = null
+
     if (!isReadyBle(context, bluetoothAdapter)) {
       trySend(ScanEvent.OnScanFailed(DroidBLE.BLE_NOT_READY_ERROR))
     }
@@ -52,6 +56,10 @@ class DroidScannerImpl(
         if (result == null) {
           return
         }
+
+        timeoutJob?.cancel()
+        timeoutJob = null
+
         if (result.device.name != DroidBLE.W32_CONTROL_HUB) {
           return
         }
@@ -69,7 +77,7 @@ class DroidScannerImpl(
       currentScanCallback,
     )
 
-    launch {
+    timeoutJob = launch {
       delay(timeout)
       Timber.d("start scan timeout.")
       trySend(ScanEvent.OnScanFailed(DroidBLE.SCAN_FAILED_TIMEOUT_ERROR))
