@@ -1,12 +1,12 @@
 package com.tatsuki.droidkit.event
 
-import android.bluetooth.le.ScanResult
+import android.bluetooth.BluetoothDevice
 
 sealed interface ScanEvent {
 
   data class OnScanResult(
     val callbackType: Int,
-    val result: ScanResult?
+    val device: BluetoothDevice
   ) : ScanEvent
 
   data class OnScanFailed(
