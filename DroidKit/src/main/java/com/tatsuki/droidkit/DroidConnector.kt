@@ -1,13 +1,16 @@
 package com.tatsuki.droidkit
 
-import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGatt
+import com.tatsuki.droidkit.event.BluetoothGattEvent
+import kotlinx.coroutines.flow.Flow
 
 interface DroidConnector {
-  suspend fun connect()
-  suspend fun disconnect()
-  suspend fun discoverServices()
-  suspend fun discoverCharacteristics()
-  suspend fun setNotifyValue(characteristic: BluetoothGattCharacteristic)
-  suspend fun setNotifyValues()
-  suspend fun writeValue()
+
+  fun connect(timeout: Long = CONNECT_TIMEOUT_MILL): Flow<BluetoothGattEvent>
+
+  fun disconnect(gatt: BluetoothGatt?)
+
+  companion object {
+    private const val CONNECT_TIMEOUT_MILL = 5000L
+  }
 }
