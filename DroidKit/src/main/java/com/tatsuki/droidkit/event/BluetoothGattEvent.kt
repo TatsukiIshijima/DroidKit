@@ -6,27 +6,30 @@ import android.bluetooth.BluetoothGattCharacteristic
 sealed interface BluetoothGattEvent {
   val gatt: BluetoothGatt?
 
-  data class OnConnectionStateChange(
+  data class OnConnected(
     override val gatt: BluetoothGatt?,
-    val status: Int,
-    val newStatus: Int,
+  ) : BluetoothGattEvent
+
+  data class OnConnectingTimeout(
+    override val gatt: BluetoothGatt?
+  ) : BluetoothGattEvent
+
+  data class OnDisconnected(
+    override val gatt: BluetoothGatt?
   ) : BluetoothGattEvent
 
   data class OnServicesDiscovered(
     override val gatt: BluetoothGatt?,
-    val status: Int,
   ) : BluetoothGattEvent
 
   data class OnCharacteristicRead(
     override val gatt: BluetoothGatt?,
     val characteristic: BluetoothGattCharacteristic?,
-    val status: Int,
   ) : BluetoothGattEvent
 
   data class OnCharacteristicWrite(
     override val gatt: BluetoothGatt?,
     val characteristic: BluetoothGattCharacteristic?,
-    val status: Int,
   ) : BluetoothGattEvent
 
   data class OnCharacteristicChanged(
