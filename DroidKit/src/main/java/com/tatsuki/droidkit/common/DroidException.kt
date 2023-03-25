@@ -1,4 +1,4 @@
-package com.tatsuki.droidkit
+package com.tatsuki.droidkit.common
 
 sealed class DroidException : Exception() {
 

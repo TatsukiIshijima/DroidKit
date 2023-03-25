@@ -1,4 +1,4 @@
-package com.tatsuki.droidkit
+package com.tatsuki.droidkit.common
 
 object DroidBLE {
   const val W32_CONTROL_HUB = "w32 ControlHub"
