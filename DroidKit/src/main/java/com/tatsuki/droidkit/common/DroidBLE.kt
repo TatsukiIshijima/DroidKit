@@ -17,6 +17,8 @@ object DroidBLE {
 
   const val BLE_NOT_READY_ERROR = -1
   const val SCAN_FAILED_TIMEOUT_ERROR = -2
+  const val CONNECT_FAILED = -3
+  const val CONNECT_FAILED_TIMEOUT_ERROR = -4
 
   fun isReadyBle(context: Context, bluetoothAdapter: BluetoothAdapter): Boolean {
     if (!isSupportedBle(context)) {
