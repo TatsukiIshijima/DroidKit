@@ -56,13 +56,13 @@ class DroidScannerImpl(
         if (result == null) {
           return
         }
+        if (result.device.name != DroidBLE.W32_CONTROL_HUB) {
+          return
+        }
 
         timeoutJob?.cancel()
         timeoutJob = null
 
-        if (result.device.name != DroidBLE.W32_CONTROL_HUB) {
-          return
-        }
         trySend(ScanEvent.OnScanResult(callbackType, result.device))
       }
 
