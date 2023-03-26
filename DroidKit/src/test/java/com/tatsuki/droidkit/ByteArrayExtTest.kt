@@ -1,6 +1,6 @@
 package com.tatsuki.droidkit
 
-import com.tatsuki.droidkit.common.asCRC16
+import com.tatsuki.droidkit.common.ext.asCRC16
 import org.junit.Test
 
 class ByteArrayExtTest {

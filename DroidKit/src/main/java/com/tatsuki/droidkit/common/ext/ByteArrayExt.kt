@@ -1,4 +1,4 @@
-package com.tatsuki.droidkit.common
+package com.tatsuki.droidkit.common.ext
 
 // https://github.com/NordicSemiconductor/Android-BLE-Common-Library/blob/c078e2579fe5c0b6d29d70cd9fc9614ac7c0d355/ble-common/src/main/java/no/nordicsemi/android/ble/common/util/CRC16.java#L167
 // https://github.com/crane-hiromu/DroidKit/blob/main/Sources/DroidKit/Extension/Array%2BExtensions.swift#L11
