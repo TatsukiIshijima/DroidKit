@@ -14,14 +14,6 @@ sealed interface BluetoothGattEvent {
     override val gatt: BluetoothGatt?
   ) : BluetoothGattEvent
 
-  data class OnDisconnected(
-    override val gatt: BluetoothGatt?
-  ) : BluetoothGattEvent
-
-  data class OnServicesDiscovered(
-    override val gatt: BluetoothGatt?,
-  ) : BluetoothGattEvent
-
   data class OnCharacteristicRead(
     override val gatt: BluetoothGatt?,
     val characteristic: BluetoothGattCharacteristic?,
