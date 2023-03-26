@@ -10,7 +10,7 @@ class DroidRawDataTest {
   fun test_create() {
     val rawData = DroidRawData.create(DroidCommand.PlaySound.S0)
 
-    val expectRawData = listOf(30, 1, 0, 225, 240)
+    val expectRawData = byteArrayOf(30, 1, 0, -31, -16)
     assert(rawData.values.size == expectRawData.size)
 
     for ((i, expect) in expectRawData.withIndex()) {

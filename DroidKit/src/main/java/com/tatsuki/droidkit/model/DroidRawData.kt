@@ -3,7 +3,7 @@ package com.tatsuki.droidkit.model
 import com.tatsuki.droidkit.common.ext.asCRC16
 
 data class DroidRawData(
-  val values: IntArray,
+  val values: ByteArray,
 ) {
 
   companion object {
@@ -12,19 +12,19 @@ data class DroidRawData(
         is DroidCommand.PlaySound -> byteArrayOf(command.type.toByte())
       }
       val payloadCount = payload.count()
-      val byteArray = IntArray(payloadCount + 4)
+      val byteArray = ByteArray(payloadCount + 4)
       val crc = payload.asCRC16()
       val byteArrayCount = byteArray.count()
 
-      byteArray[0] = ((command.code shl 1) or ((payloadCount and 256) shr 8))
-      byteArray[1] = (payloadCount and 255)
+      byteArray[0] = ((command.code shl 1) or ((payloadCount and 256) shr 8)).toByte()
+      byteArray[1] = (payloadCount and 255).toByte()
 
       for (i in 0 until payloadCount) {
-        byteArray[i + 2] = payload[i].toInt()
+        byteArray[i + 2] = payload[i]
       }
 
-      byteArray[byteArrayCount - 1] = (crc and 255)
-      byteArray[byteArrayCount - 2] = ((crc and 65280) shr 8)
+      byteArray[byteArrayCount - 1] = (crc and 255).toByte()
+      byteArray[byteArrayCount - 2] = ((crc and 65280) shr 8).toByte()
 
       return DroidRawData(byteArray)
     }
