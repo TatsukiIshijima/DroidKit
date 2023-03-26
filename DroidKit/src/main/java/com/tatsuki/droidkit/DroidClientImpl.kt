@@ -7,6 +7,7 @@ import com.tatsuki.droidkit.common.DroidBLE.CONNECT_FAILED
 import com.tatsuki.droidkit.common.DroidBLE.CONNECT_FAILED_TIMEOUT_ERROR
 import com.tatsuki.droidkit.event.BluetoothGattEvent
 import com.tatsuki.droidkit.event.ScanEvent
+import com.tatsuki.droidkit.model.DroidCommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 
@@ -75,8 +76,10 @@ class DroidClientImpl(
     droidConnector = DroidConnectorImpl(context, device)
     droidConnector?.connect()
       ?.onEach { gattEvent ->
-        bluetoothGatt = gattEvent.gatt
         mutableBluetoothGattStateFlow.value = gattEvent
+        bluetoothGatt = gattEvent.gatt
+        val gatt = bluetoothGatt ?: return@onEach
+        droidOperator = DroidOperatorImpl(gatt)
       }
       ?.launchIn(coroutineScope)
   }
@@ -87,9 +90,13 @@ class DroidClientImpl(
     }
   }
 
-  fun inConnected(): Boolean {
+  override fun isConnected(): Boolean {
     if (bluetoothGatt == null || bluetoothDevice == null) return false
     return bluetoothGatt?.getConnectionState(bluetoothDevice) == BluetoothProfile.STATE_CONNECTED
+  }
+
+  override suspend fun playSound(command: DroidCommand.PlaySound) {
+    droidOperator?.playSound(command)
   }
 
   override fun disconnect() {

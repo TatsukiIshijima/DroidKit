@@ -1,5 +1,7 @@
 package com.tatsuki.droidkit
 
+import com.tatsuki.droidkit.model.DroidCommand
+
 interface DroidClient {
 
   suspend fun connect(
@@ -8,4 +10,8 @@ interface DroidClient {
   )
 
   fun disconnect()
+
+  fun isConnected(): Boolean
+
+  suspend fun playSound(command: DroidCommand.PlaySound)
 }
