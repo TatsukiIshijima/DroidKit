@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothProfile
 import android.content.Context
+import com.tatsuki.droidkit.common.DroidBLE
 import com.tatsuki.droidkit.event.BluetoothGattEvent
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DroidConnectorImpl(
@@ -30,27 +32,38 @@ class DroidConnectorImpl(
 
     val gatt = device.connectGatt(context, false, object : BluetoothGattCallback() {
       override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
-        if (isClosedForSend) {
-          return
-        }
+        if (isClosedForSend) return
 
-        timeoutJob?.cancel()
-        timeoutJob = null
+        if (status != BluetoothGatt.GATT_SUCCESS) return
 
-        if (status == BluetoothGatt.GATT_SUCCESS) {
-          val gattEvent = when (newState) {
-            BluetoothProfile.STATE_CONNECTED -> BluetoothGattEvent.OnConnected(gatt)
-            BluetoothProfile.STATE_DISCONNECTED -> BluetoothGattEvent.OnDisconnected(gatt)
-            else -> null
-          } ?: return
-          trySend(gattEvent)
+        if (newState == BluetoothProfile.STATE_CONNECTED) {
+          gatt?.discoverServices()
         }
       }
 
       override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
-        if (status == BluetoothGatt.GATT_SUCCESS) {
-          trySend(BluetoothGattEvent.OnServicesDiscovered(gatt))
+        if (isClosedForSend) return
+
+        if (status != BluetoothGatt.GATT_SUCCESS) return
+
+        val service = gatt?.getService(UUID.fromString(DroidBLE.W32_SERVICE_UUID)) ?: return
+
+        val characteristics = service.characteristics.filter { characteristic ->
+          characteristic.uuid == UUID.fromString(DroidBLE.W32_CHARACTERISTIC) ||
+                  characteristic.uuid == UUID.fromString(DroidBLE.W32_BOARD_CONTROL_CHARACTERISTIC) ||
+                  characteristic.uuid == UUID.fromString(DroidBLE.W32_AUDIO_UPLOAD_CHARACTERISTIC)
         }
+        // 全てのNotificationの設定が有効になれば接続完了とする
+        val isAllNotificationEnabled = characteristics.map { characteristic ->
+          gatt.setCharacteristicNotification(characteristic, true)
+        }.all { true }
+
+        if (!isAllNotificationEnabled) return
+
+        timeoutJob?.cancel()
+        timeoutJob = null
+
+        trySend(BluetoothGattEvent.OnConnected(gatt))
       }
 
       override fun onCharacteristicRead(
