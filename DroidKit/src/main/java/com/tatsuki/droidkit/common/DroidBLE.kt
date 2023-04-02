@@ -15,22 +15,16 @@ object DroidBLE {
   const val W32_AUDIO_UPLOAD_CHARACTERISTIC = "d9d9e9e3-aa4e-4797-8151-cb41cedaf2ad"
   const val CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb"
 
-  const val BLE_NOT_READY_ERROR = -1
-  const val SCAN_FAILED_TIMEOUT_ERROR = -2
-  const val CONNECT_FAILED = -3
-  const val CONNECT_FAILED_TIMEOUT_ERROR = -4
-
   fun isReadyBle(context: Context, bluetoothAdapter: BluetoothAdapter): Boolean {
     if (!isSupportedBle(context)) {
-      Timber.e("This device is not supported BLE.")
-      return false
+      throw DroidBLEException.NotSupport()
     }
     if (!isGrantedBlePermission(context)) {
-      return false
+      throw DroidBLEException.NotGrantedPermission()
     }
     if (!bluetoothAdapter.isEnabled) {
       Timber.e("BLE is disable.")
-      return false
+      throw DroidBLEException.NotEnabled()
     }
     return true
   }
