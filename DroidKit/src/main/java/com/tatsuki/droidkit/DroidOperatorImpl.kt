@@ -6,12 +6,12 @@ class DroidOperatorImpl(
   private val droidConnector: DroidConnector
 ) : DroidOperator {
 
-  override suspend fun go() {
-
+  override suspend fun go(speed: Double) {
+    droidConnector.writeValue(DroidCommand.MoveWheel.Go(speed))
   }
 
-  override suspend fun back() {
-
+  override suspend fun back(speed: Double) {
+    droidConnector.writeValue(DroidCommand.MoveWheel.Back(speed))
   }
 
   override suspend fun turn() {
@@ -19,7 +19,7 @@ class DroidOperatorImpl(
   }
 
   override suspend fun stop() {
-
+    droidConnector.writeValue(DroidCommand.MoveWheel.End())
   }
 
   override suspend fun endTurn() {

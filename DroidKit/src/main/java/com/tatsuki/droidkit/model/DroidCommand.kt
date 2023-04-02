@@ -1,5 +1,7 @@
 package com.tatsuki.droidkit.model
 
+import kotlin.math.round
+
 sealed interface DroidCommand {
   val code: Int
 
@@ -15,6 +17,40 @@ sealed interface DroidCommand {
   sealed interface MoveWheel : DroidCommand {
     override val code: Int
       get() = 10
+
+    val moveType: Int
+
+    fun value(): Int {
+      when (this) {
+        is Go -> {
+          if (speed < 0) return 0
+          val result = if (speed in 0.0..1.0) speed else 1.0
+          return (127 + round(128.0 * result)).toInt()
+        }
+        is Back -> {
+          if (speed < 0) return 0
+          val result = if (speed in 0.0..1.0) speed else 1.0
+          return (128 - round(128 * result)).toInt()
+        }
+        is End -> {
+          return 128
+        }
+      }
+    }
+
+    data class Go(
+      val speed: Double,
+      override val moveType: Int = 2
+    ) : MoveWheel
+
+    data class Back(
+      val speed: Double,
+      override val moveType: Int = 2
+    ) : MoveWheel
+
+    data class End(
+      override val moveType: Int = 2
+    ) : MoveWheel
   }
 
   sealed class PlaySound(val type: Int) : DroidCommand {

@@ -3,8 +3,8 @@ package com.tatsuki.droidkit
 import com.tatsuki.droidkit.model.DroidCommand
 
 interface DroidOperator {
-  suspend fun go()
-  suspend fun back()
+  suspend fun go(speed: Double)
+  suspend fun back(speed: Double)
   suspend fun turn()
   suspend fun stop()
   suspend fun endTurn()
