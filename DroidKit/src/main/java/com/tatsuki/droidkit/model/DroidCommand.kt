@@ -58,7 +58,7 @@ sealed interface DroidCommand {
           is Back -> {
             if (speed < 0) return 0
             val result = if (speed in 0.0..1.0) speed else 1.0
-            return (128 - round(128 * result)).toInt()
+            return (128 - round(128.0 * result)).toInt()
           }
           is End -> 128
         }
