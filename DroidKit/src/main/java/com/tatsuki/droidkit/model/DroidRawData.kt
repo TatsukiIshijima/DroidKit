@@ -9,6 +9,8 @@ data class DroidRawData(
   companion object {
     fun create(command: DroidCommand): DroidRawData {
       val payload = when (command) {
+        // TODO:他のコマンド対応
+        is DroidCommand.ChangeLEDColor -> byteArrayOf(command.red.toByte(), command.green.toByte(), command.blue.toByte())
         is DroidCommand.PlaySound -> byteArrayOf(command.type.toByte())
       }
       val payloadCount = payload.count()

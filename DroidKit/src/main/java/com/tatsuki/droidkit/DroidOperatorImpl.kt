@@ -1,11 +1,6 @@
 package com.tatsuki.droidkit
 
-import android.annotation.SuppressLint
-import android.bluetooth.BluetoothGatt
-import com.tatsuki.droidkit.common.DroidBLE
 import com.tatsuki.droidkit.model.DroidCommand
-import com.tatsuki.droidkit.model.DroidRawData
-import java.util.UUID
 
 class DroidOperatorImpl(
   private val droidConnector: DroidConnector
@@ -31,8 +26,8 @@ class DroidOperatorImpl(
 
   }
 
-  override suspend fun changeLEDColor() {
-
+  override suspend fun changeLEDColor(red: Int, green: Int, blue: Int) {
+    droidConnector.writeValue(DroidCommand.ChangeLEDColor(red, green, blue))
   }
 
   override suspend fun playSound(soundCommand: DroidCommand.PlaySound) {

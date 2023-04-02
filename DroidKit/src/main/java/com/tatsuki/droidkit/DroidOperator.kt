@@ -8,6 +8,6 @@ interface DroidOperator {
   suspend fun turn()
   suspend fun stop()
   suspend fun endTurn()
-  suspend fun changeLEDColor()
+  suspend fun changeLEDColor(red: Int, green: Int, blue: Int)
   suspend fun playSound(soundCommand: DroidCommand.PlaySound)
 }

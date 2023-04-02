@@ -3,7 +3,11 @@ package com.tatsuki.droidkit.model
 sealed interface DroidCommand {
   val code: Int
 
-  sealed interface ChangeLEDColor : DroidCommand {
+  data class ChangeLEDColor(
+    val red: Int,
+    val green: Int,
+    val blue: Int,
+  ) : DroidCommand {
     override val code: Int
       get() = 9
   }
