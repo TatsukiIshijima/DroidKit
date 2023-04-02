@@ -12,9 +12,9 @@ data class DroidRawData(
         // TODO:他のコマンド対応
         is DroidCommand.ChangeLEDColor -> byteArrayOf(command.red.toByte(), command.green.toByte(), command.blue.toByte())
         is DroidCommand.PlaySound -> byteArrayOf(command.type.toByte())
-        is DroidCommand.MoveWheel.Go -> byteArrayOf(command.moveType.toByte(), command.value().toByte())
-        is DroidCommand.MoveWheel.Back -> byteArrayOf(command.moveType.toByte(), command.value().toByte())
-        is DroidCommand.MoveWheel.End -> byteArrayOf(command.moveType.toByte(), command.value().toByte())
+        is DroidCommand.WheelAction.Move.Go -> byteArrayOf(command.type.toByte(), command.value().toByte())
+        is DroidCommand.WheelAction.Move.Back -> byteArrayOf(command.type.toByte(), command.value().toByte())
+        is DroidCommand.WheelAction.Move.End -> byteArrayOf(command.type.toByte(), command.value().toByte())
       }
       val payloadCount = payload.count()
       val byteArray = ByteArray(payloadCount + 4)

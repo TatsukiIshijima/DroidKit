@@ -14,43 +14,51 @@ sealed interface DroidCommand {
       get() = 9
   }
 
-  sealed interface MoveWheel : DroidCommand {
+  sealed interface WheelAction : DroidCommand {
     override val code: Int
       get() = 10
 
-    val moveType: Int
+    val type: Int
 
-    fun value(): Int {
-      when (this) {
-        is Go -> {
-          if (speed < 0) return 0
-          val result = if (speed in 0.0..1.0) speed else 1.0
-          return (127 + round(128.0 * result)).toInt()
-        }
-        is Back -> {
-          if (speed < 0) return 0
-          val result = if (speed in 0.0..1.0) speed else 1.0
-          return (128 - round(128 * result)).toInt()
-        }
-        is End -> {
-          return 128
-        }
-      }
+    fun value(): Int
+
+    sealed interface Turn : WheelAction {
+      override val type: Int
+        get() = 1
+
+
     }
 
-    data class Go(
-      val speed: Double,
-      override val moveType: Int = 2
-    ) : MoveWheel
+    sealed interface Move : WheelAction {
+      override val type: Int
+        get() = 2
 
-    data class Back(
-      val speed: Double,
-      override val moveType: Int = 2
-    ) : MoveWheel
+      override fun value(): Int {
+        return when (this) {
+          is Go -> {
+            if (speed < 0) return 0
+            val result = if (speed in 0.0..1.0) speed else 1.0
+            return (127 + round(128.0 * result)).toInt()
+          }
+          is Back -> {
+            if (speed < 0) return 0
+            val result = if (speed in 0.0..1.0) speed else 1.0
+            return (128 - round(128 * result)).toInt()
+          }
+          is End -> 128
+        }
+      }
 
-    data class End(
-      override val moveType: Int = 2
-    ) : MoveWheel
+      data class Go(
+        val speed: Double
+      ) : Move
+
+      data class Back(
+        val speed: Double
+      ) : Move
+
+      object End : Move
+    }
   }
 
   sealed class PlaySound(val type: Int) : DroidCommand {
