@@ -2,30 +2,45 @@ package com.tatsuki.droidkit.event
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
+import android.bluetooth.BluetoothGattService
 
 sealed interface BluetoothGattEvent {
-  val gatt: BluetoothGatt?
+
+  object None : BluetoothGattEvent
+
+  object OnConnecting : BluetoothGattEvent
 
   data class OnConnected(
-    override val gatt: BluetoothGatt?,
+    val gatt: BluetoothGatt?,
   ) : BluetoothGattEvent
 
-  data class OnConnectingTimeout(
-    override val gatt: BluetoothGatt?
-  ) : BluetoothGattEvent
+  object OnDisconnected : BluetoothGattEvent
 
-  data class OnCharacteristicRead(
-    override val gatt: BluetoothGatt?,
-    val characteristic: BluetoothGattCharacteristic?,
-  ) : BluetoothGattEvent
+  sealed interface Service : BluetoothGattEvent {
+    object OnDiscovering : Service
 
-  data class OnCharacteristicWrite(
-    override val gatt: BluetoothGatt?,
-    val characteristic: BluetoothGattCharacteristic?,
-  ) : BluetoothGattEvent
+    data class OnDiscovered(
+      val service: BluetoothGattService
+    ) : Service
+  }
 
-  data class OnCharacteristicChanged(
-    override val gatt: BluetoothGatt?,
-    val characteristic: BluetoothGattCharacteristic?
-  ) : BluetoothGattEvent
+  sealed interface Characteristic : BluetoothGattEvent {
+
+    object OnSetNotifications : Characteristic
+
+    data class OnRead(
+      val gatt: BluetoothGatt?,
+      val characteristic: BluetoothGattCharacteristic?
+    ) : Characteristic
+
+    data class OnWrite(
+      val gatt: BluetoothGatt?,
+      val characteristic: BluetoothGattCharacteristic?
+    ) : Characteristic
+
+    data class OnChanged(
+      val gatt: BluetoothGatt?,
+      val characteristic: BluetoothGattCharacteristic?
+    ) : Characteristic
+  }
 }
