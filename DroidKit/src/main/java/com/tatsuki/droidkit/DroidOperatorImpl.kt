@@ -7,23 +7,23 @@ class DroidOperatorImpl(
 ) : DroidOperator {
 
   override suspend fun go(speed: Double) {
-    droidConnector.writeValue(DroidCommand.MoveWheel.Go(speed))
+    droidConnector.writeValue(DroidCommand.WheelAction.Move.Go(speed))
   }
 
   override suspend fun back(speed: Double) {
-    droidConnector.writeValue(DroidCommand.MoveWheel.Back(speed))
+    droidConnector.writeValue(DroidCommand.WheelAction.Move.Back(speed))
   }
 
-  override suspend fun turn() {
-
+  override suspend fun turn(degree: Double) {
+    droidConnector.writeValue(DroidCommand.WheelAction.Turn.Steer(degree))
   }
 
   override suspend fun stop() {
-    droidConnector.writeValue(DroidCommand.MoveWheel.End())
+    droidConnector.writeValue(DroidCommand.WheelAction.Move.End)
   }
 
   override suspend fun endTurn() {
-
+    droidConnector.writeValue(DroidCommand.WheelAction.Turn.End)
   }
 
   override suspend fun changeLEDColor(red: Int, green: Int, blue: Int) {

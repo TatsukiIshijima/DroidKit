@@ -9,12 +9,32 @@ data class DroidRawData(
   companion object {
     fun create(command: DroidCommand): DroidRawData {
       val payload = when (command) {
-        // TODO:他のコマンド対応
-        is DroidCommand.ChangeLEDColor -> byteArrayOf(command.red.toByte(), command.green.toByte(), command.blue.toByte())
+        is DroidCommand.ChangeLEDColor -> byteArrayOf(
+          command.red.toByte(),
+          command.green.toByte(),
+          command.blue.toByte()
+        )
         is DroidCommand.PlaySound -> byteArrayOf(command.type.toByte())
-        is DroidCommand.WheelAction.Move.Go -> byteArrayOf(command.type.toByte(), command.value().toByte())
-        is DroidCommand.WheelAction.Move.Back -> byteArrayOf(command.type.toByte(), command.value().toByte())
-        is DroidCommand.WheelAction.Move.End -> byteArrayOf(command.type.toByte(), command.value().toByte())
+        is DroidCommand.WheelAction.Move.Go -> byteArrayOf(
+          command.type.toByte(),
+          command.value().toByte()
+        )
+        is DroidCommand.WheelAction.Move.Back -> byteArrayOf(
+          command.type.toByte(),
+          command.value().toByte()
+        )
+        is DroidCommand.WheelAction.Move.End -> byteArrayOf(
+          command.type.toByte(),
+          command.value().toByte()
+        )
+        is DroidCommand.WheelAction.Turn.Steer -> byteArrayOf(
+          command.type.toByte(),
+          command.value().toByte()
+        )
+        is DroidCommand.WheelAction.Turn.End -> byteArrayOf(
+          command.type.toByte(),
+          command.value().toByte()
+        )
       }
       val payloadCount = payload.count()
       val byteArray = ByteArray(payloadCount + 4)

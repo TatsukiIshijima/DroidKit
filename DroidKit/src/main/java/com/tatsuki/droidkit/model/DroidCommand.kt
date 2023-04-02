@@ -26,7 +26,22 @@ sealed interface DroidCommand {
       override val type: Int
         get() = 1
 
+      override fun value(): Int {
+        return when (this) {
+          is Steer -> {
+            if (degree < 0) return 0
+            val result = if (degree in 0.0..180.0) degree else 180.0
+            return (round(result / 180.0 * 255.0)).toInt()
+          }
+          is End -> 128
+        }
+      }
 
+      data class Steer(
+        val degree: Double
+      ) : Turn
+
+      object End : Turn
     }
 
     sealed interface Move : WheelAction {
