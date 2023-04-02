@@ -66,6 +66,18 @@ class MainViewModel(
     }
   }
 
+  fun changeLEDColor(red: Int, green: Int, blue: Int) {
+    viewModelScope.launch {
+      try {
+        droidOperator.changeLEDColor(red, green, blue)
+      } catch (e: CancellationException) {
+        throw e
+      } catch (e: Exception) {
+        Timber.d(e)
+      }
+    }
+  }
+
   fun playSound(soundCommend: DroidCommand.PlaySound) {
     viewModelScope.launch {
       try {
