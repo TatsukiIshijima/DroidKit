@@ -1,15 +1,11 @@
 package com.tatsuki.droidkit
 
-import com.tatsuki.droidkit.event.ScanEvent
-import kotlinx.coroutines.flow.Flow
+import android.bluetooth.BluetoothDevice
 
 interface DroidScanner {
+  var device: BluetoothDevice?
 
-  fun startScan(timeout: Long = SCAN_TIMEOUT_MILL): Flow<ScanEvent>
+  suspend fun startScan()
 
-  fun stopScan()
-
-  companion object {
-    private const val SCAN_TIMEOUT_MILL = 5000L
-  }
+  suspend fun stopScan()
 }

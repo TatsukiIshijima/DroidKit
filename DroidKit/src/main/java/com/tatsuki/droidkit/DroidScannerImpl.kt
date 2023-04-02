@@ -2,41 +2,51 @@ package com.tatsuki.droidkit
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
-import android.content.Context
 import android.os.ParcelUuid
 import com.tatsuki.droidkit.common.DroidBLE
-import com.tatsuki.droidkit.common.DroidBLE.isReadyBle
 import com.tatsuki.droidkit.event.ScanEvent
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.launch
-import timber.log.Timber
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import java.util.*
 
-@OptIn(ExperimentalCoroutinesApi::class)
 class DroidScannerImpl(
-  private val context: Context,
   private val bluetoothAdapter: BluetoothAdapter,
 ) : DroidScanner {
 
-  private var currentScanCallback: ScanCallback? = null
+  override var device: BluetoothDevice? = null
+
+  private val mutableScanEventStateFlow = MutableStateFlow<ScanEvent>(ScanEvent.None)
+
+  private val isScanning: Boolean
+    get() = mutableScanEventStateFlow.value is ScanEvent.OnScanning
+
+  private val scanCallback = object : ScanCallback() {
+    @SuppressLint("MissingPermission")
+    override fun onScanResult(callbackType: Int, result: ScanResult?) {
+      if (result == null) {
+        return
+      }
+      if (result.device.name != DroidBLE.W32_CONTROL_HUB) {
+        return
+      }
+      device = result.device
+      mutableScanEventStateFlow.value = ScanEvent.OnFound(result.device)
+    }
+
+    override fun onScanFailed(errorCode: Int) {
+      mutableScanEventStateFlow.value = ScanEvent.OnScanFailed(errorCode)
+    }
+  }
 
   @SuppressLint("MissingPermission")
-  override fun startScan(timeout: Long): Flow<ScanEvent> = callbackFlow<ScanEvent> {
+  override suspend fun startScan() {
+    stopScan()
 
-    var timeoutJob: Job? = null
-
-    if (!isReadyBle(context, bluetoothAdapter)) {
-      trySend(ScanEvent.OnScanFailed(DroidBLE.BLE_NOT_READY_ERROR))
-    }
     val scanFilter = ScanFilter.Builder()
       .setDeviceName(DroidBLE.W32_CONTROL_HUB)
       .setServiceUuid(
@@ -48,56 +58,28 @@ class DroidScannerImpl(
     val scanSettings = ScanSettings.Builder()
       .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
       .build()
-    currentScanCallback = object : ScanCallback() {
-      override fun onScanResult(callbackType: Int, result: ScanResult?) {
-        if (isClosedForSend) {
-          return
-        }
-        if (result == null) {
-          return
-        }
-        if (result.device.name != DroidBLE.W32_CONTROL_HUB) {
-          return
-        }
-
-        timeoutJob?.cancel()
-        timeoutJob = null
-
-        trySend(ScanEvent.OnScanResult(callbackType, result.device))
-      }
-
-      override fun onScanFailed(errorCode: Int) {
-        trySend(ScanEvent.OnScanFailed(errorCode))
-      }
-    }
 
     bluetoothAdapter.bluetoothLeScanner.startScan(
       listOf(scanFilter),
       scanSettings,
-      currentScanCallback,
+      scanCallback,
     )
 
-    timeoutJob = launch {
-      delay(timeout)
-      Timber.d("start scan timeout.")
-      trySend(ScanEvent.OnScanFailed(DroidBLE.SCAN_FAILED_TIMEOUT_ERROR))
-      close()
+    mutableScanEventStateFlow.value = ScanEvent.OnScanning
+
+    mutableScanEventStateFlow.first {
+      it is ScanEvent.OnFound
     }
 
-    awaitClose {
-      stopScan()
-    }
+    stopScan()
   }
 
   @SuppressLint("MissingPermission")
-  override fun stopScan() {
-    if (!isReadyBle(context, bluetoothAdapter)) {
-      return
+  override suspend fun stopScan() {
+    bluetoothAdapter.bluetoothLeScanner.stopScan(scanCallback)
+    mutableScanEventStateFlow.value = ScanEvent.OnStopScan
+    mutableScanEventStateFlow.first {
+      it is ScanEvent.OnStopScan
     }
-    if (currentScanCallback != null) {
-      Timber.d("stop scan.")
-      bluetoothAdapter.bluetoothLeScanner.stopScan(currentScanCallback)
-    }
-    currentScanCallback = null
   }
 }
