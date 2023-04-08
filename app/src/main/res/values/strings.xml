@@ -1,3 +1,29 @@
 <resources>
+    <!-- common -->
     <string name="app_name">DroidKitApp</string>
+    <string name="set_button_label">Set</string>
+    <string name="reset_button_label">Reset</string>
+
+    <!-- connection -->
+    <string name="connection_section_title">Connection</string>
+    <string name="connect_button_label">Connect</string>
+    <string name="disconnect_button_label">Disconnect</string>
+
+    <!-- movement -->
+    <string name="movement_section_title">Movement</string>
+    <string name="speed_label">Speed</string>
+    <string name="go_button_label">Go</string>
+    <string name="back_button_label">Back</string>
+
+    <!-- rotation -->
+    <string name="rotation_section_title">Rotation</string>
+    <string name="degree_label">Degree</string>
+    <string name="turn_button_label">Turn</string>
+
+    <!-- color -->
+    <string name="color_section_title">Color</string>
+
+    <!-- sound -->
+    <string name="sound_section_title">Sound</string>
+
 </resources>
