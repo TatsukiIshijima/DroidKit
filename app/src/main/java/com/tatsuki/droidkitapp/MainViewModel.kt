@@ -9,8 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.tatsuki.droidkit.*
 import com.tatsuki.droidkit.common.DroidBLE
 import com.tatsuki.droidkit.model.DroidCommand
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.TimeoutCancellationException
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
@@ -38,12 +37,8 @@ class MainViewModel(
           val droidDevice = droidScanner.device ?: return@withTimeout
           droidConnector.connect(droidDevice)
         }
-      } catch (e: TimeoutCancellationException) {
-        Timber.e("Connection timed out after $timeoutMill milliseconds!")
-        throw e
-      } catch (e: CancellationException) {
-        throw e
       } catch (e: Exception) {
+        ensureActive()
         droidScanner.stopScan()
         droidConnector.disconnect()
         Timber.e(e)
@@ -58,9 +53,8 @@ class MainViewModel(
           throw IllegalStateException()
         }
         droidConnector.disconnect()
-      } catch (e: CancellationException) {
-        throw e
       } catch (e: Exception) {
+        ensureActive()
         Timber.e(e)
       }
     }
@@ -70,9 +64,8 @@ class MainViewModel(
     viewModelScope.launch {
       try {
         droidOperator.changeLEDColor(red, green, blue)
-      } catch (e: CancellationException) {
-        throw e
       } catch (e: Exception) {
+        ensureActive()
         Timber.d(e)
       }
     }
@@ -82,9 +75,8 @@ class MainViewModel(
     viewModelScope.launch {
       try {
         droidOperator.playSound(soundCommend)
-      } catch (e: CancellationException) {
-        throw e
       } catch (e: Exception) {
+        ensureActive()
         Timber.d(e)
       }
     }
