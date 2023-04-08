@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.github.skydoves.colorpicker.compose.rememberColorPickerController
 import com.tatsuki.droidkit.model.DroidCommand
 import com.tatsuki.droidkitapp.ui.compose.view.ColorSection
 import com.tatsuki.droidkitapp.ui.compose.view.ConnectionSection
@@ -46,6 +47,9 @@ class MainActivity : ComponentActivity() {
     )
 
     setContent {
+
+      val colorPickerController = rememberColorPickerController()
+
       DroidKitAppTheme {
         Surface(
           modifier = Modifier.fillMaxSize(),
@@ -87,6 +91,8 @@ class MainActivity : ComponentActivity() {
             colorSection = {
               ColorSection(
                 modifier = Modifier.fillMaxWidth(),
+                colorPickerController = colorPickerController,
+                onColorChanged = {},
                 onClickSet = {},
                 onClickReset = {},
               )
@@ -146,6 +152,8 @@ fun DefaultPreview() {
       colorSection = {
         ColorSection(
           modifier = Modifier.fillMaxWidth(),
+          colorPickerController = rememberColorPickerController(),
+          onColorChanged = {},
           onClickSet = {},
           onClickReset = {},
         )
