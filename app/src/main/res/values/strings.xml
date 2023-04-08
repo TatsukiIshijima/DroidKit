@@ -11,13 +11,13 @@
 
     <!-- movement -->
     <string name="movement_section_title">Movement</string>
-    <string name="speed_label">Speed</string>
+    <string name="speed_label">Speed: %s</string>
     <string name="go_button_label">Go</string>
     <string name="back_button_label">Back</string>
 
     <!-- rotation -->
     <string name="rotation_section_title">Rotation</string>
-    <string name="degree_label">Degree</string>
+    <string name="degree_label">Degree: %s°</string>
     <string name="turn_button_label">Turn</string>
 
     <!-- color -->
