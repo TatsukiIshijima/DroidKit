@@ -14,9 +14,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tatsuki.droidkit.model.DroidCommand
+import com.tatsuki.droidkitapp.ui.compose.view.ColorSection
+import com.tatsuki.droidkitapp.ui.compose.view.ConnectionSection
+import com.tatsuki.droidkitapp.ui.compose.view.MovementSection
+import com.tatsuki.droidkitapp.ui.compose.view.RotationSection
+import com.tatsuki.droidkitapp.ui.compose.view.SoundSection
 import com.tatsuki.droidkitapp.ui.theme.DroidKitAppTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -46,8 +52,12 @@ class MainActivity : ComponentActivity() {
           color = MaterialTheme.colors.background
         ) {
           Body(
+            modifier = Modifier
+              .fillMaxWidth()
+              .padding(48.dp),
             connectSection = {
               ConnectionSection(
+                modifier = Modifier.fillMaxWidth(),
                 onClickConnect = {
                   mainViewModel.connect()
                 },
@@ -56,12 +66,35 @@ class MainActivity : ComponentActivity() {
                 },
               )
             },
+            movementSection = {
+              MovementSection(
+                modifier = Modifier.fillMaxWidth(),
+                value = 0f,
+                onValueChange = {},
+                onClickGo = {},
+                onClickBack = {},
+              )
+            },
+            rotationSection = {
+              RotationSection(
+                modifier = Modifier.fillMaxWidth(),
+                value = 0f,
+                onValueChange = {},
+                onClickTurn = {},
+                onClickRest = {},
+              )
+            },
             colorSection = {
-              ColorSection()
+              ColorSection(
+                modifier = Modifier.fillMaxWidth(),
+                onClickSet = {},
+                onClickReset = {},
+              )
             },
             soundSection = {
               SoundSection(
-                onClickButton = {
+                modifier = Modifier.fillMaxWidth(),
+                onClickTypeNo = {
                   mainViewModel.playSound(DroidCommand.PlaySound.S1)
                 }
               )
@@ -84,22 +117,55 @@ class MainActivity : ComponentActivity() {
 fun DefaultPreview() {
   DroidKitAppTheme {
     Body(
+      modifier = Modifier.fillMaxWidth(),
       connectSection = {
         ConnectionSection(
+          modifier = Modifier.fillMaxWidth(),
           onClickConnect = {},
           onClickDisconnect = {},
         )
       },
-      colorSection = { ColorSection() },
-      soundSection = { SoundSection() },
+      movementSection = {
+        MovementSection(
+          modifier = Modifier.fillMaxWidth(),
+          value = 0f,
+          onValueChange = {},
+          onClickGo = {},
+          onClickBack = {},
+        )
+      },
+      rotationSection = {
+        RotationSection(
+          modifier = Modifier.fillMaxWidth(),
+          value = 0f,
+          onValueChange = {},
+          onClickTurn = {},
+          onClickRest = {},
+        )
+      },
+      colorSection = {
+        ColorSection(
+          modifier = Modifier.fillMaxWidth(),
+          onClickSet = {},
+          onClickReset = {},
+        )
+      },
+      soundSection = {
+        SoundSection(
+          modifier = Modifier.fillMaxWidth(),
+          onClickTypeNo = {}
+        )
+      },
     )
   }
 }
 
 @Composable
 private fun Body(
-  modifier: Modifier = Modifier.fillMaxWidth(),
+  modifier: Modifier,
   connectSection: @Composable () -> Unit = {},
+  movementSection: @Composable () -> Unit = {},
+  rotationSection: @Composable () -> Unit = {},
   colorSection: @Composable () -> Unit = {},
   soundSection: @Composable () -> Unit = {},
 ) {
@@ -110,112 +176,13 @@ private fun Body(
   ) {
     connectSection()
     Spacer(modifier = Modifier.size(24.dp))
+    movementSection()
+    Spacer(modifier = Modifier.size(24.dp))
+    rotationSection()
+    Spacer(modifier = Modifier.size(24.dp))
     colorSection()
     Spacer(modifier = Modifier.size(24.dp))
     soundSection()
     Spacer(modifier = Modifier.size(24.dp))
-  }
-}
-
-@Preview
-@Composable
-private fun ConnectionSection(
-  modifier: Modifier = Modifier.fillMaxWidth(),
-  onClickConnect: () -> Unit = {},
-  onClickDisconnect: () -> Unit = {},
-) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally
-  ) {
-    Text(text = "Connection")
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.Center,
-    ) {
-      ActionButtonsRow(
-        positiveButtonLabel = "Connect",
-        negativeButtonLabel = "Disconnect",
-        onClickPositive = { onClickConnect() },
-        onClickNegative = { onClickDisconnect() },
-      )
-    }
-  }
-}
-
-@Preview
-@Composable
-private fun ColorSection(
-  modifier: Modifier = Modifier.fillMaxWidth()
-) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally,
-  ) {
-    Text(text = "Color")
-    ActionButtonsRow(
-      positiveButtonLabel = "Set",
-      negativeButtonLabel = "Reset",
-      onClickPositive = {},
-      onClickNegative = {},
-    )
-  }
-}
-
-@Preview
-@Composable
-private fun SoundSection(
-  modifier: Modifier = Modifier.fillMaxWidth(),
-  onClickButton: () -> Unit = {}
-) {
-  Column(
-    modifier = modifier,
-    horizontalAlignment = Alignment.CenterHorizontally,
-  ) {
-    Text(text = "Sound")
-    Row(
-      modifier = Modifier.fillMaxWidth(),
-      horizontalArrangement = Arrangement.Center,
-      verticalAlignment = Alignment.CenterVertically
-    ) {
-      Text(text = "Type No.")
-      Spacer(modifier = Modifier.size(16.dp))
-      Button(
-        onClick = {
-          onClickButton()
-        },
-        content = {
-          Text(text = "Set")
-        },
-      )
-    }
-  }
-}
-
-@Preview
-@Composable
-private fun ActionButtonsRow(
-  positiveButtonLabel: String = "OK",
-  negativeButtonLabel: String = "Cancel",
-  onClickPositive: () -> Unit = {},
-  onClickNegative: () -> Unit = {},
-) {
-  Row(
-    modifier = Modifier.fillMaxWidth(),
-    horizontalArrangement = Arrangement.Center
-  ) {
-    Button(
-      onClick = { onClickPositive() },
-      content = {
-        Text(text = positiveButtonLabel)
-      },
-    )
-    Spacer(modifier = Modifier.size(16.dp))
-    Button(
-      onClick = { onClickNegative() },
-      content = {
-        Text(text = negativeButtonLabel)
-      },
-    )
   }
 }
