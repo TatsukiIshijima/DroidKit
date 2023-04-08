@@ -18,7 +18,7 @@ import com.tatsuki.droidkitapp.R
 @Composable
 fun SoundSection(
   modifier: Modifier,
-  onClickTypeNo: (Int) -> Unit,
+  onClickSet: () -> Unit,
 ) {
   SectionFrame(
     modifier = modifier,
@@ -32,7 +32,7 @@ fun SoundSection(
         Text(text = stringResource(id = R.string.sound_type_label))
         Spacer(modifier = Modifier.size(16.dp))
         Button(
-          onClick = { onClickTypeNo(0) },
+          onClick = { onClickSet() },
           content = {
             Text(text = stringResource(id = R.string.set_button_label))
           },
@@ -47,6 +47,6 @@ fun SoundSection(
 private fun PreviewSoundSection() {
   SoundSection(
     modifier = Modifier.fillMaxWidth(),
-    onClickTypeNo = {},
+    onClickSet = {},
   )
 }
