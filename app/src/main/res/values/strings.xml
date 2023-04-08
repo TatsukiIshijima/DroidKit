@@ -3,6 +3,8 @@
     <string name="app_name">DroidKitApp</string>
     <string name="set_button_label">Set</string>
     <string name="reset_button_label">Reset</string>
+    <string name="positive_button_label">OK</string>
+    <string name="negative_button_label">Cancel</string>
 
     <!-- connection -->
     <string name="connection_section_title">Connection</string>

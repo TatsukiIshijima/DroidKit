@@ -22,8 +22,11 @@ import com.tatsuki.droidkitapp.ui.compose.view.ColorSection
 import com.tatsuki.droidkitapp.ui.compose.view.ConnectionSection
 import com.tatsuki.droidkitapp.ui.compose.view.MovementSection
 import com.tatsuki.droidkitapp.ui.compose.view.RotationSection
+import com.tatsuki.droidkitapp.ui.compose.view.SoundListDialog
 import com.tatsuki.droidkitapp.ui.compose.view.SoundSection
 import com.tatsuki.droidkitapp.ui.theme.DroidKitAppTheme
+import com.vanpra.composematerialdialogs.MaterialDialogState
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class MainActivity : ComponentActivity() {
@@ -49,6 +52,12 @@ class MainActivity : ComponentActivity() {
 
       val scrollState = rememberScrollState()
       val colorPickerController = rememberColorPickerController()
+      val dialogState = rememberMaterialDialogState()
+
+      SoundListDialog(
+        dialogState = dialogState,
+        onClickPositiveButton = {},
+      )
 
       DroidKitAppTheme {
         Surface(
@@ -102,7 +111,8 @@ class MainActivity : ComponentActivity() {
               SoundSection(
                 modifier = Modifier.fillMaxWidth(),
                 onClickSet = {
-                  mainViewModel.playSound(DroidCommand.PlaySound.S1)
+                  dialogState.show()
+//                  mainViewModel.playSound(DroidCommand.PlaySound.S1)
                 }
               )
             },
