@@ -25,5 +25,6 @@
 
     <!-- sound -->
     <string name="sound_section_title">Sound</string>
+    <string name="sound_type_label">Type No.</string>
 
 </resources>
