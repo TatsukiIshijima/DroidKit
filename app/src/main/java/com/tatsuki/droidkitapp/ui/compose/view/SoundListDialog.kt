@@ -12,6 +12,8 @@ import com.vanpra.composematerialdialogs.title
 @Composable
 fun SoundListDialog(
   dialogState: MaterialDialogState,
+  initialSection: Int,
+  onChoiceChange: (Int) -> Unit,
   onClickPositiveButton: () -> Unit,
 ) {
   val soundTypes = DroidCommand.PlaySound::class.sealedSubclasses
@@ -32,8 +34,9 @@ fun SoundListDialog(
   ) {
     title(res = R.string.sound_section_title)
     listItemsSingleChoice(
-      initialSelection = 0,
+      initialSelection = initialSection,
       list = soundTypes,
+      onChoiceChange = onChoiceChange
     )
   }
 }
