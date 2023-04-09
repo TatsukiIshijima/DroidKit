@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.github.skydoves.colorpicker.compose.ColorEnvelope
 import com.github.skydoves.colorpicker.compose.ColorPickerController
 import com.github.skydoves.colorpicker.compose.HsvColorPicker
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
@@ -20,9 +20,8 @@ import com.tatsuki.droidkitapp.R
 fun ColorSection(
   modifier: Modifier,
   colorPickerController: ColorPickerController,
-  onColorChanged: (ColorEnvelope) -> Unit,
-  onClickSet: () -> Unit,
-  onClickReset: () -> Unit,
+  onClickSet: (Color) -> Unit,
+  onClickReset: (Color) -> Unit,
 ) {
   SectionFrame(
     modifier = modifier,
@@ -37,12 +36,18 @@ fun ColorSection(
             .fillMaxWidth()
             .height(300.dp),
           controller = colorPickerController,
-          onColorChanged = onColorChanged,
         )
         Spacer(modifier = Modifier.size(16.dp))
         ActionButtonsRow(
-          onClickPositive = onClickSet,
-          onClickNegative = onClickReset
+          onClickPositive = {
+            val selectedColor = colorPickerController.selectedColor.value
+            onClickSet(selectedColor)
+          },
+          onClickNegative = {
+            colorPickerController.selectCenter(true)
+            val selectedColor = colorPickerController.selectedColor.value
+            onClickReset(selectedColor)
+          }
         )
       }
     }
@@ -55,7 +60,6 @@ private fun PreviewColorSection() {
   ColorSection(
     modifier = Modifier.fillMaxWidth(),
     colorPickerController = rememberColorPickerController(),
-    onColorChanged = {},
     onClickSet = {},
     onClickReset = {},
   )
