@@ -12,12 +12,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.skydoves.colorpicker.compose.rememberColorPickerController
-import com.tatsuki.droidkit.model.DroidCommand
 import com.tatsuki.droidkitapp.ui.compose.view.ColorSection
 import com.tatsuki.droidkitapp.ui.compose.view.ConnectionSection
 import com.tatsuki.droidkitapp.ui.compose.view.MovementSection
@@ -25,9 +25,9 @@ import com.tatsuki.droidkitapp.ui.compose.view.RotationSection
 import com.tatsuki.droidkitapp.ui.compose.view.SoundListDialog
 import com.tatsuki.droidkitapp.ui.compose.view.SoundSection
 import com.tatsuki.droidkitapp.ui.theme.DroidKitAppTheme
-import com.vanpra.composematerialdialogs.MaterialDialogState
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import kotlinx.coroutines.flow.MutableStateFlow
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
 
@@ -56,7 +56,13 @@ class MainActivity : ComponentActivity() {
 
       SoundListDialog(
         dialogState = dialogState,
-        onClickPositiveButton = {},
+        initialSection = mainViewModel.selectedSoundStateFlow.collectAsState().value,
+        onChoiceChange = { position ->
+          mainViewModel.onChangeSound(position)
+        },
+        onClickPositiveButton = {
+          Timber.d("Sound: onClickPositiveButton soundType=${mainViewModel.selectedSoundStateFlow.value}")
+        },
       )
 
       DroidKitAppTheme {
@@ -83,28 +89,43 @@ class MainActivity : ComponentActivity() {
             movementSection = {
               MovementSection(
                 modifier = Modifier.fillMaxWidth(),
-                value = 0f,
-                onValueChange = {},
-                onClickGo = {},
-                onClickBack = {},
+                value = mainViewModel.speedStateFlow.collectAsState().value,
+                onValueChange = {
+                  mainViewModel.onChangeSpeed(it)
+                },
+                onClickGo = {
+                  Timber.d("Movement: onClickGo speed=${mainViewModel.speedStateFlow.value}")
+                },
+                onClickBack = {
+                  Timber.d("Movement: onClickBack speed=${mainViewModel.speedStateFlow.value}")
+                },
               )
             },
             rotationSection = {
               RotationSection(
                 modifier = Modifier.fillMaxWidth(),
-                value = 0f,
-                onValueChange = {},
-                onClickTurn = {},
-                onClickRest = {},
+                value = mainViewModel.degreeStateFlow.collectAsState().value,
+                onValueChange = {
+                  mainViewModel.onChangeDegree(it)
+                },
+                onClickTurn = {
+                  Timber.d("Rotation: onClickTurn degree=${mainViewModel.degreeStateFlow.value}")
+                },
+                onClickRest = {
+                  Timber.d("Rotation: onClickRest degree=${mainViewModel.degreeStateFlow.value}")
+                },
               )
             },
             colorSection = {
               ColorSection(
                 modifier = Modifier.fillMaxWidth(),
                 colorPickerController = colorPickerController,
-                onColorChanged = {},
-                onClickSet = {},
-                onClickReset = {},
+                onClickSet = { selectedColor ->
+                  Timber.d("Color: onClickSet selectedColor=$selectedColor")
+                },
+                onClickReset = { selectedColor ->
+                  Timber.d("Color: onClickReset selectedColor=$selectedColor")
+                },
               )
             },
             soundSection = {
@@ -112,7 +133,6 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxWidth(),
                 onClickSet = {
                   dialogState.show()
-//                  mainViewModel.playSound(DroidCommand.PlaySound.S1)
                 }
               )
             },
@@ -164,7 +184,6 @@ fun DefaultPreview() {
         ColorSection(
           modifier = Modifier.fillMaxWidth(),
           colorPickerController = rememberColorPickerController(),
-          onColorChanged = {},
           onClickSet = {},
           onClickReset = {},
         )

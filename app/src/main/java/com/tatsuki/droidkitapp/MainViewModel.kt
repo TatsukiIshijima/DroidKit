@@ -10,12 +10,14 @@ import com.tatsuki.droidkit.*
 import com.tatsuki.droidkit.common.DroidBLE
 import com.tatsuki.droidkit.model.DroidCommand
 import kotlinx.coroutines.ensureActive
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import timber.log.Timber
 
 class MainViewModel(
-  application: Application
+  application: Application,
 ) : AndroidViewModel(application) {
 
   private val bluetoothAdapter: BluetoothAdapter =
@@ -24,8 +26,17 @@ class MainViewModel(
   private val droidConnector: DroidConnector = DroidConnectorImpl(application)
   private val droidOperator: DroidOperator = DroidOperatorImpl(droidConnector)
 
+  private val mutableSpeedStateFlow = MutableStateFlow(0f)
+  val speedStateFlow = mutableSpeedStateFlow.asStateFlow()
+
+  private val mutableDegreeStateFlow = MutableStateFlow(0f)
+  val degreeStateFlow = mutableDegreeStateFlow.asStateFlow()
+
+  private val mutableSelectedSoundStateFlow = MutableStateFlow(0)
+  val selectedSoundStateFlow = mutableSelectedSoundStateFlow.asStateFlow()
+
   fun connect(
-    timeoutMill: Long = 5000L
+    timeoutMill: Long = 5000L,
   ) {
     viewModelScope.launch {
       try {
@@ -60,6 +71,14 @@ class MainViewModel(
     }
   }
 
+  fun onChangeSpeed(speed: Float) {
+    mutableSpeedStateFlow.value = speed
+  }
+
+  fun onChangeDegree(degree: Float) {
+    mutableDegreeStateFlow.value = degree
+  }
+
   fun changeLEDColor(red: Int, green: Int, blue: Int) {
     viewModelScope.launch {
       try {
@@ -69,6 +88,10 @@ class MainViewModel(
         Timber.d(e)
       }
     }
+  }
+
+  fun onChangeSound(type: Int) {
+    mutableSelectedSoundStateFlow.value = type
   }
 
   fun playSound(soundCommend: DroidCommand.PlaySound) {
