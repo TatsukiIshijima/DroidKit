@@ -14,8 +14,8 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withTimeout
 import timber.log.Timber
+import kotlin.math.round
 
 class MainViewModel(
   application: Application,
@@ -36,24 +36,20 @@ class MainViewModel(
   private val mutableSelectedSoundStateFlow = MutableStateFlow(0)
   val selectedSoundStateFlow = mutableSelectedSoundStateFlow.asStateFlow()
 
-  fun connect(
-    timeoutMill: Long = 5000L,
-  ) {
+  fun connect() {
     viewModelScope.launch {
       try {
         if (!DroidBLE.isReadyBle(getApplication(), bluetoothAdapter)) {
           throw IllegalStateException()
         }
-        withTimeout(timeoutMill) {
-          droidScanner.startScan()
-          val droidDevice = droidScanner.device ?: return@withTimeout
-          droidConnector.connect(droidDevice)
-        }
+        droidScanner.startScan()
+        val droidDevice = droidScanner.device ?: return@launch
+        droidConnector.connect(droidDevice)
       } catch (e: Exception) {
         ensureActive()
+        Timber.e(e)
         droidScanner.stopScan()
         droidConnector.disconnect()
-        Timber.e(e)
       }
     }
   }
@@ -79,8 +75,7 @@ class MainViewModel(
   fun go() {
     viewModelScope.launch {
       try {
-        Timber.d("go: speed=${mutableSpeedStateFlow.value}")
-//        droidOperator.go(mutableSpeedStateFlow.value)
+        droidOperator.go(mutableSpeedStateFlow.value.toDouble())
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)
@@ -91,8 +86,7 @@ class MainViewModel(
   fun back() {
     viewModelScope.launch {
       try {
-        Timber.d("back: speed=${mutableSpeedStateFlow.value}")
-//        droidOperator.back(mutableSpeedStateFlow.value)
+        droidOperator.back(mutableSpeedStateFlow.value.toDouble())
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)
@@ -104,8 +98,7 @@ class MainViewModel(
     viewModelScope.launch {
       try {
         mutableSpeedStateFlow.value = 0f
-        Timber.d("stop: speed=${mutableSpeedStateFlow.value}")
-//        droidOperator.stop()
+        droidOperator.stop()
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)
@@ -120,8 +113,7 @@ class MainViewModel(
   fun turn() {
     viewModelScope.launch {
       try {
-        Timber.d("turn degree=${degreeStateFlow.value}")
-//        droidOperator.turn(degreeStateFlow.value.toDouble())
+        droidOperator.turn(degreeStateFlow.value.toDouble())
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)
@@ -133,8 +125,7 @@ class MainViewModel(
     viewModelScope.launch {
       try {
         mutableDegreeStateFlow.value = 90f
-        Timber.d("rest degree=${degreeStateFlow.value}")
-//        droidOperator.endTurn()
+        droidOperator.endTurn()
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)
@@ -145,8 +136,11 @@ class MainViewModel(
   fun changeLEDColor(color: Color) {
     viewModelScope.launch {
       try {
-        Timber.d("changeLEDColor: selectedColor=$color")
-//        droidOperator.changeLEDColor(red, green, blue)
+        droidOperator.changeLEDColor(
+          red = color.red.toUInt8(),
+          green = color.green.toUInt8(),
+          blue = color.blue.toUInt8(),
+        )
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)
@@ -162,8 +156,7 @@ class MainViewModel(
     viewModelScope.launch {
       try {
         val soundCommand = mutableSelectedSoundStateFlow.value.toPlaySoundCommand()
-        Timber.d("Sound: onClickPositiveButton soundCommand=${soundCommand}")
-//        droidOperator.playSound(soundCommand)
+        droidOperator.playSound(soundCommand)
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)
@@ -176,4 +169,8 @@ fun Int.toPlaySoundCommand(): DroidCommand.PlaySound {
   return DroidCommand.PlaySound::class.sealedSubclasses
     .mapNotNull { it.objectInstance }
     .first { it.type == this }
+}
+
+fun Float.toUInt8(): Int {
+  return round(255 - 255 * (1f - this)).toInt()
 }
