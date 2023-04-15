@@ -15,6 +15,13 @@ In addition, the droid can be operated with simple programming from a smartphone
 However, there is a problem.
 Currently, [the app has been removed from the store and cannot be installed](https://community.sphero.com/t/droid-inventor-kit-app-gone-from-play-app-store/2783).
 
+## Preparation
+Before use, connect the device to each port on the w32 control hub of the Droid Inventor Kit.
+Connect o11 Servo to port 2. Connect DC motor to port 3.
+
+w32 control hub port2 -> o11 Servo
+w32 control hub port3 -> o25 dc motor
+
 ## Install
 
 ## How to Use
