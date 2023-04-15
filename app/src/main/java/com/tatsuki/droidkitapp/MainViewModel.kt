@@ -30,7 +30,7 @@ class MainViewModel(
   private val mutableSpeedStateFlow = MutableStateFlow(0f)
   val speedStateFlow = mutableSpeedStateFlow.asStateFlow()
 
-  private val mutableDegreeStateFlow = MutableStateFlow(0f)
+  private val mutableDegreeStateFlow = MutableStateFlow(90f)
   val degreeStateFlow = mutableDegreeStateFlow.asStateFlow()
 
   private val mutableSelectedSoundStateFlow = MutableStateFlow(0)
@@ -100,6 +100,19 @@ class MainViewModel(
     }
   }
 
+  fun stop() {
+    viewModelScope.launch {
+      try {
+        mutableSpeedStateFlow.value = 0f
+        Timber.d("stop: speed=${mutableSpeedStateFlow.value}")
+//        droidOperator.stop()
+      } catch (e: Exception) {
+        ensureActive()
+        Timber.e(e)
+      }
+    }
+  }
+
   fun onChangeDegree(degree: Float) {
     mutableDegreeStateFlow.value = degree
   }
@@ -108,7 +121,7 @@ class MainViewModel(
     viewModelScope.launch {
       try {
         Timber.d("turn degree=${degreeStateFlow.value}")
-//        droidOperator.turn(degreeStateFlow.value)
+//        droidOperator.turn(degreeStateFlow.value.toDouble())
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)
@@ -119,8 +132,9 @@ class MainViewModel(
   fun reset() {
     viewModelScope.launch {
       try {
+        mutableDegreeStateFlow.value = 90f
         Timber.d("rest degree=${degreeStateFlow.value}")
-
+//        droidOperator.endTurn()
       } catch (e: Exception) {
         ensureActive()
         Timber.e(e)

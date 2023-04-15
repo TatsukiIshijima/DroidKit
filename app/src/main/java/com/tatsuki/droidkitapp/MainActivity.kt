@@ -85,6 +85,9 @@ class MainActivity : ComponentActivity() {
                 onClickGo = {
                   mainViewModel.go()
                 },
+                onClickStop = {
+                  mainViewModel.stop()
+                },
                 onClickBack = {
                   mainViewModel.back()
                 },
@@ -157,6 +160,7 @@ fun DefaultPreview() {
           value = 0f,
           onValueChange = {},
           onClickGo = {},
+          onClickStop = {},
           onClickBack = {},
         )
       },

@@ -14,6 +14,7 @@ fun MovementSection(
   value: Float,
   onValueChange: (Float) -> Unit,
   onClickGo: () -> Unit,
+  onClickStop: () -> Unit,
   onClickBack: () -> Unit,
 ) {
   SectionFrame(
@@ -31,11 +32,10 @@ fun MovementSection(
           onValueChange = onValueChange,
           valueRange = 0f..1f,
         )
-        ActionButtonsRow(
-          positiveButtonLabelId = R.string.go_button_label,
-          negativeButtonLabelId = R.string.back_button_label,
-          onClickPositive = onClickGo,
-          onClickNegative = onClickBack,
+        MovementButtonsRow(
+          onClickGo = onClickGo,
+          onClickStop = onClickStop,
+          onClickBack = onClickBack,
         )
       }
     }
@@ -48,6 +48,7 @@ private fun PreviewMovementSection() {
   MovementSection(
     modifier = Modifier.fillMaxWidth(),
     onClickGo = {},
+    onClickStop = {},
     onClickBack = {},
     value = 0f,
     onValueChange = {}
