@@ -33,20 +33,11 @@ class MainActivity : ComponentActivity() {
 
   private val mainViewModel by viewModels<MainViewModel>()
 
-  // TODO:ViewModelへ移行
-  private val mutableIsGrantedFineLocationPermissionStateFlow = MutableStateFlow(false)
-
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    // TODO:ViewModelへ移行
-    val requestPermissionLauncher =
-      registerForActivityResult(RequestPermission()) { isGranted ->
-        mutableIsGrantedFineLocationPermissionStateFlow.value = isGranted
-      }
-    requestPermissionLauncher.launch(
-      Manifest.permission.ACCESS_FINE_LOCATION
-    )
+    val requestPermissionLauncher = registerForActivityResult(RequestPermission()) { }
+    requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
 
     setContent {
 
