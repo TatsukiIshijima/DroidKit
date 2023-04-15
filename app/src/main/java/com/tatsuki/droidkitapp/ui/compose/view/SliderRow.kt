@@ -29,7 +29,7 @@ fun SliderRow(
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
   ) {
-    Text(text = stringResource(id = valueTypeResource, value))
+    Text(text = stringResource(id = valueTypeResource, "%.1f".format(value)))
     Spacer(modifier = Modifier.size(24.dp))
     Slider(
       value = value,
