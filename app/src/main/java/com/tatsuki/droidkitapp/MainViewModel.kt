@@ -4,6 +4,7 @@ import android.app.Application
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.tatsuki.droidkit.*
@@ -75,17 +76,66 @@ class MainViewModel(
     mutableSpeedStateFlow.value = speed
   }
 
+  fun go() {
+    viewModelScope.launch {
+      try {
+        Timber.d("go: speed=${mutableSpeedStateFlow.value}")
+//        droidOperator.go(mutableSpeedStateFlow.value)
+      } catch (e: Exception) {
+        ensureActive()
+        Timber.e(e)
+      }
+    }
+  }
+
+  fun back() {
+    viewModelScope.launch {
+      try {
+        Timber.d("back: speed=${mutableSpeedStateFlow.value}")
+//        droidOperator.back(mutableSpeedStateFlow.value)
+      } catch (e: Exception) {
+        ensureActive()
+        Timber.e(e)
+      }
+    }
+  }
+
   fun onChangeDegree(degree: Float) {
     mutableDegreeStateFlow.value = degree
   }
 
-  fun changeLEDColor(red: Int, green: Int, blue: Int) {
+  fun turn() {
     viewModelScope.launch {
       try {
-        droidOperator.changeLEDColor(red, green, blue)
+        Timber.d("turn degree=${degreeStateFlow.value}")
+//        droidOperator.turn(degreeStateFlow.value)
       } catch (e: Exception) {
         ensureActive()
-        Timber.d(e)
+        Timber.e(e)
+      }
+    }
+  }
+
+  fun reset() {
+    viewModelScope.launch {
+      try {
+        Timber.d("rest degree=${degreeStateFlow.value}")
+
+      } catch (e: Exception) {
+        ensureActive()
+        Timber.e(e)
+      }
+    }
+  }
+
+  fun changeLEDColor(color: Color) {
+    viewModelScope.launch {
+      try {
+        Timber.d("changeLEDColor: selectedColor=$color")
+//        droidOperator.changeLEDColor(red, green, blue)
+      } catch (e: Exception) {
+        ensureActive()
+        Timber.e(e)
       }
     }
   }
@@ -94,14 +144,22 @@ class MainViewModel(
     mutableSelectedSoundStateFlow.value = type
   }
 
-  fun playSound(soundCommend: DroidCommand.PlaySound) {
+  fun playSound() {
     viewModelScope.launch {
       try {
-        droidOperator.playSound(soundCommend)
+        val soundCommand = mutableSelectedSoundStateFlow.value.toPlaySoundCommand()
+        Timber.d("Sound: onClickPositiveButton soundCommand=${soundCommand}")
+//        droidOperator.playSound(soundCommand)
       } catch (e: Exception) {
         ensureActive()
-        Timber.d(e)
+        Timber.e(e)
       }
     }
   }
+}
+
+fun Int.toPlaySoundCommand(): DroidCommand.PlaySound {
+  return DroidCommand.PlaySound::class.sealedSubclasses
+    .mapNotNull { it.objectInstance }
+    .first { it.type == this }
 }

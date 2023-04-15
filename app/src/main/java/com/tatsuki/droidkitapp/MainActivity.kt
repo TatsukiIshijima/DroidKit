@@ -26,8 +26,6 @@ import com.tatsuki.droidkitapp.ui.compose.view.SoundListDialog
 import com.tatsuki.droidkitapp.ui.compose.view.SoundSection
 import com.tatsuki.droidkitapp.ui.theme.DroidKitAppTheme
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
-import kotlinx.coroutines.flow.MutableStateFlow
-import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
 
@@ -52,7 +50,7 @@ class MainActivity : ComponentActivity() {
           mainViewModel.onChangeSound(position)
         },
         onClickPositiveButton = {
-          Timber.d("Sound: onClickPositiveButton soundType=${mainViewModel.selectedSoundStateFlow.value}")
+          mainViewModel.playSound()
         },
       )
 
@@ -85,10 +83,10 @@ class MainActivity : ComponentActivity() {
                   mainViewModel.onChangeSpeed(it)
                 },
                 onClickGo = {
-                  Timber.d("Movement: onClickGo speed=${mainViewModel.speedStateFlow.value}")
+                  mainViewModel.go()
                 },
                 onClickBack = {
-                  Timber.d("Movement: onClickBack speed=${mainViewModel.speedStateFlow.value}")
+                  mainViewModel.back()
                 },
               )
             },
@@ -100,10 +98,10 @@ class MainActivity : ComponentActivity() {
                   mainViewModel.onChangeDegree(it)
                 },
                 onClickTurn = {
-                  Timber.d("Rotation: onClickTurn degree=${mainViewModel.degreeStateFlow.value}")
+                  mainViewModel.turn()
                 },
-                onClickRest = {
-                  Timber.d("Rotation: onClickRest degree=${mainViewModel.degreeStateFlow.value}")
+                onClickReset = {
+                  mainViewModel.reset()
                 },
               )
             },
@@ -112,10 +110,10 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier.fillMaxWidth(),
                 colorPickerController = colorPickerController,
                 onClickSet = { selectedColor ->
-                  Timber.d("Color: onClickSet selectedColor=$selectedColor")
+                  mainViewModel.changeLEDColor(selectedColor)
                 },
                 onClickReset = { selectedColor ->
-                  Timber.d("Color: onClickReset selectedColor=$selectedColor")
+                  mainViewModel.changeLEDColor(selectedColor)
                 },
               )
             },
@@ -168,7 +166,7 @@ fun DefaultPreview() {
           value = 0f,
           onValueChange = {},
           onClickTurn = {},
-          onClickRest = {},
+          onClickReset = {},
         )
       },
       colorSection = {

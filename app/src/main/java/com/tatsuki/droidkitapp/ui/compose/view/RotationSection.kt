@@ -14,7 +14,7 @@ fun RotationSection(
   value: Float,
   onValueChange: (Float) -> Unit,
   onClickTurn: () -> Unit,
-  onClickRest: () -> Unit,
+  onClickReset: () -> Unit,
 ) {
   SectionFrame(
     modifier = modifier,
@@ -34,7 +34,7 @@ fun RotationSection(
         ActionButtonsRow(
           positiveButtonLabelId = R.string.turn_button_label,
           onClickPositive = onClickTurn,
-          onClickNegative = onClickRest
+          onClickNegative = onClickReset
         )
       }
     }
@@ -49,6 +49,6 @@ private fun PreviewRotationSection() {
     value = 0f,
     onValueChange = {},
     onClickTurn = {},
-    onClickRest = {},
+    onClickReset = {},
   )
 }
