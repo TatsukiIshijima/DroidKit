@@ -1,4 +1,3 @@
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
 plugins {
@@ -10,11 +9,7 @@ plugins {
 val versionProperties = loadProperties(file("versions.properties").absolutePath)
 val versionName: String = versionProperties.getProperty("VERSION_NAME")
 
-group = "com.github.tatsukiishijima"
-version = versionName
-
 android {
-  namespace = "com.tatsuki.droidkit"
   compileSdk = 32
 
   defaultConfig {
@@ -34,21 +29,6 @@ android {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
-    getByName("debug") {
-
-    }
-  }
-  libraryVariants.all {
-    outputs.forEach { output ->
-      if (output !is BaseVariantOutputImpl) {
-        return@forEach
-      }
-      val fileName = when (name) {
-        "debug" -> "droidkit-debug-${versionName}.aar"
-        else -> "droidkit-${versionName}.aar"
-      }
-      output.outputFileName = fileName
-    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -57,9 +37,13 @@ android {
   kotlinOptions {
     jvmTarget = "1.8"
   }
-  testFixtures {
-    enable = true
+  publishing {
+    singleVariant("release") {
+      withSourcesJar()
+      withJavadocJar()
+    }
   }
+  namespace = "com.tatsuki.droidkit"
 }
 
 dependencies {
