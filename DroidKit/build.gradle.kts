@@ -8,7 +8,10 @@ plugins {
 }
 
 val versionProperties = loadProperties(file("versions.properties").absolutePath)
-val versionName = versionProperties.getProperty("VERSION_NAME")
+val versionName: String = versionProperties.getProperty("VERSION_NAME")
+
+group = "com.github.tatsukiishijima"
+version = versionName
 
 android {
   namespace = "com.tatsuki.droidkit"
@@ -28,7 +31,7 @@ android {
 
   buildTypes {
     getByName("release") {
-      isMinifyEnabled = true
+      isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
     getByName("debug") {
