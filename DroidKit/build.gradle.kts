@@ -1,3 +1,6 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import org.jetbrains.kotlin.konan.properties.loadProperties
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -6,6 +9,9 @@ plugins {
 android {
     namespace = "com.tatsuki.droidkit"
     compileSdk = 32
+
+    val versionProperties = loadProperties(file("versions.properties").absolutePath)
+    val versionName = versionProperties.getProperty("VERSION_NAME")
 
     defaultConfig {
         minSdk = 21
@@ -26,6 +32,18 @@ android {
         }
         getByName("debug") {
 
+        }
+    }
+    libraryVariants.all {
+        outputs.forEach { output ->
+            if (output !is BaseVariantOutputImpl) {
+                return@forEach
+            }
+            val fileName = when (name) {
+                "debug" -> "droidkit-debug-${versionName}.aar"
+                else -> "droidkit-${versionName}.aar"
+            }
+            output.outputFileName = fileName
         }
     }
     compileOptions {
