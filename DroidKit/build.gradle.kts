@@ -10,6 +10,9 @@ plugins {
 val versionProperties = loadProperties(file("versions.properties").absolutePath)
 val versionName: String = versionProperties.getProperty("VERSION_NAME")
 
+group = "com.github.tatsukiishijima"
+version = versionName
+
 android {
   compileSdk = 32
 
@@ -23,7 +26,7 @@ android {
 
   buildTypes {
     getByName("release") {
-      isMinifyEnabled = true
+      isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
     getByName("debug") {
@@ -49,7 +52,6 @@ android {
   kotlinOptions {
     jvmTarget = "1.8"
   }
-  namespace = "com.tatsuki.droidkit"
 }
 
 dependencies {
@@ -63,16 +65,14 @@ dependencies {
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 }
 
-
-publishing {
-  publications {
-    register<MavenPublication>("release") {
-      groupId = "com.github.tatsukiishijima"
-      artifactId = "DroidKit"
-      version = versionName
-
-      afterEvaluate {
+afterEvaluate {
+  publishing {
+    publications {
+      register<MavenPublication>("release") {
         from(components["release"])
+        groupId = "com.github.tatsukiishijima"
+        artifactId = "DroidKit"
+        version = versionName
       }
     }
   }
