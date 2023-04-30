@@ -149,4 +149,4 @@ CoroutineScope.launch {
 ## Sample App ScreenShot
 | App | Color Picker | Sound Menu |
 |:--:|:---:|:---:|
-| <img src="https://user-images.githubusercontent.com/17661705/232210097-83f46862-92c9-4663-96ef-02720425743e.png" width="300"/> | <img src="https://user-images.githubusercontent.com/17661705/232210103-f87565e3-e7e7-4412-8ced-f76f2f051200.png" width="300"/> | <img src="https://user-images.githubusercontent.com/17661705/232210104-a73b6684-e96f-40bf-8a7d-7e2c34eaaea0.png" width="300"/> |
+| <img src="app/screenshot/screen1.png" width="300"/> | <img src="app/screenshot/screen2.png" width="300"/> | <img src="app/screenshot/screen3.png" width="300"/> |
