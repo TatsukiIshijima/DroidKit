@@ -1,19 +1,11 @@
-import com.android.build.gradle.internal.api.BaseVariantOutputImpl
-import org.jetbrains.kotlin.konan.properties.loadProperties
-
 plugins {
   id("com.android.library")
   id("org.jetbrains.kotlin.android")
   id("maven-publish")
 }
 
-val versionProperties = loadProperties(file("versions.properties").absolutePath)
-val versionName: String = versionProperties.getProperty("VERSION_NAME")
-
-group = "com.github.tatsukiishijima"
-version = versionName
-
 android {
+  namespace = "com.tatsuki.droidkit"
   compileSdk = 32
 
   defaultConfig {
@@ -29,21 +21,6 @@ android {
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
     }
-    getByName("debug") {
-
-    }
-  }
-  libraryVariants.all {
-    outputs.forEach { output ->
-      if (output !is BaseVariantOutputImpl) {
-        return@forEach
-      }
-      val fileName = when (name) {
-        "debug" -> "droidkit-debug-${versionName}.aar"
-        else -> "droidkit-${versionName}.aar"
-      }
-      output.outputFileName = fileName
-    }
   }
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -52,7 +29,6 @@ android {
   kotlinOptions {
     jvmTarget = "1.8"
   }
-  namespace = "com.tatsuki.droidkit"
 }
 
 dependencies {
@@ -66,14 +42,15 @@ dependencies {
   androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
 }
 
-afterEvaluate {
-  publishing {
-    publications {
-      register<MavenPublication>("release") {
+publishing {
+  publications {
+    register<MavenPublication>("release") {
+      groupId = "com.github.tatsukiishijima"
+      artifactId = "DroidKit"
+      version = "0.9.4"
+
+      afterEvaluate {
         from(components["release"])
-        groupId = "com.github.tatsukiishijima"
-        artifactId = "DroidKit"
-        version = versionName
       }
     }
   }
