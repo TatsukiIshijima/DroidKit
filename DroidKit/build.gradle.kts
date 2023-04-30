@@ -47,7 +47,7 @@ publishing {
     register<MavenPublication>("release") {
       groupId = "com.github.tatsukiishijima"
       artifactId = "DroidKit"
-      version = "0.9.4"
+      version = "0.9.3"
 
       afterEvaluate {
         from(components["release"])
