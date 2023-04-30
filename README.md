@@ -69,6 +69,82 @@ dependencies {
 ```
 
 ## How to Use
+### Instance
+```kotlin
+  val bluetoothAdapter: BluetoothAdapter = (application.applicationContext.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
+  val droidScanner: DroidScanner = DroidScannerImpl(bluetoothAdapter)
+  val droidConnector: DroidConnector = DroidConnectorImpl(application)
+  val droidOperator: DroidOperator = DroidOperatorImpl(droidConnector)
+```
+
+### Connect
+```kotlin
+CoroutineScope.launch {
+  droidScanner.startScan()
+  val droidDevice = droidScanner.deivce
+  droidConnector.connect(droidDevice)
+}
+```
+
+### Disconnect
+```kotlin
+CoroutineScope.launch {
+  droidConnector.disconnect()
+}
+```
+
+### Go
+```kotlin
+CoroutineScope.launch {
+  droidOperator.go(0.5f)
+}
+```
+
+### Back
+```kotlin
+CoroutineScope.launch {
+  droidOperator.back(0.5f)
+}
+```
+
+### Stop
+```kotlin
+CoroutineScope.launch {
+  droidOperator.stop()
+}
+```
+
+### Turn
+```kotlin
+CoroutineScope.launch {
+  droidOperator.turn(90f)
+}
+```
+
+### EndTurn
+```kotlin
+CoroutineScope.launch {
+  droidOperator.endTurn()
+}
+```
+
+### ChangeLED
+```kotlin
+CoroutineScope.launch {
+  droidOperator.changeLEDColor(
+    red = 255,
+    green = 255,
+    blue = 255,
+  )
+}
+```
+
+### PlaySound
+```kotlin
+CoroutineScope.launch {
+  droidOperator.playSound(DroidCommand.PlaySound.S0)
+}
+```
 
 ## Sample App ScreenShot
 | App | Color Picker | Sound Menu |
