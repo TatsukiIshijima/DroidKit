@@ -1,8 +1,10 @@
 # DroidKit
 
+[![](https://jitpack.io/v/TatsukiIshijima/DroidKit.svg)](https://jitpack.io/#TatsukiIshijima/DroidKit)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## What's this?
+This is a BLE library for Droid Inventor Kit app development that simplifies the code to run the Droid Inventor Kit. It is based on the Swift version of [Droid Kit](https://github.com/crane-hiromu/DroidKit). Thanks to @hcrane.
 
 ### Do you know **'Droid Inventor Kit'** ?
 
@@ -19,10 +21,52 @@ Currently, [the app has been removed from the store and cannot be installed](htt
 Before use, connect the device to each port on the w32 control hub of the Droid Inventor Kit.
 Connect o11 Servo to port 2. Connect DC motor to port 3.
 
-w32 control hub port2 -> o11 Servo
-w32 control hub port3 -> o25 dc motor
+- w32 control hub port2 -> o11 Servo
+- w32 control hub port3 -> o25 dc motor
 
 ## Install
+1. In `settings.gradle`, add `maven { url 'https://jitpack.io }`.
+
+### Groovy
+```
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+```
+
+### Kotlin
+```
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven ("https://jitpack.io")
+    }
+}
+```
+
+2. In `build.gradle`(app level), add `implementation`
+### Groovy
+```
+dependencies {
+    ...
+    implementation 'com.github.TatsukiIshijima:DroidKit:$version'
+}
+```
+
+### Kotlin
+```
+dependencies {
+    ...
+    implementation ("com.github.TatsukiIshijima:DroidKit:$version")
+}
+```
 
 ## How to Use
 
@@ -30,5 +74,3 @@ w32 control hub port3 -> o25 dc motor
 | App | Color Picker | Sound Menu |
 |:--:|:---:|:---:|
 | <img src="https://user-images.githubusercontent.com/17661705/232210097-83f46862-92c9-4663-96ef-02720425743e.png" width="300"/> | <img src="https://user-images.githubusercontent.com/17661705/232210103-f87565e3-e7e7-4412-8ced-f76f2f051200.png" width="300"/> | <img src="https://user-images.githubusercontent.com/17661705/232210104-a73b6684-e96f-40bf-8a7d-7e2c34eaaea0.png" width="300"/> |
-
-## Example
