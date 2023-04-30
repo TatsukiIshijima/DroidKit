@@ -45,9 +45,9 @@ dependencies {
 publishing {
   publications {
     register<MavenPublication>("release") {
-      groupId = "com.github.tatsukiishijima"
+      groupId = "com.github.TatsukiIshijima"
       artifactId = "DroidKit"
-      version = "0.9.3"
+      version = "0.9.4"
 
       afterEvaluate {
         from(components["release"])
