@@ -150,3 +150,6 @@ CoroutineScope.launch {
 | App | Color Picker | Sound Menu |
 |:--:|:---:|:---:|
 | <img src="app/screenshot/screen1.png" width="300"/> | <img src="app/screenshot/screen2.png" width="300"/> | <img src="app/screenshot/screen3.png" width="300"/> |
+
+## App Link
+[<img src="https://raw.githubusercontent.com/steverichey/google-play-badge-svg/master/img/ja_get.svg" width="200"/>](https://play.google.com/store/apps/details?id=com.tatsuki.droidkitapp)
