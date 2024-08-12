@@ -6,11 +6,11 @@ plugins {
 
 android {
   namespace = "com.tatsuki.droidkit"
-  compileSdk = 32
+  compileSdk = 34
 
   defaultConfig {
     minSdk = 21
-    targetSdk = 32
+    targetSdk = 34
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     consumerProguardFiles("consumer-rules.pro")
@@ -47,7 +47,7 @@ publishing {
     register<MavenPublication>("release") {
       groupId = "com.github.TatsukiIshijima"
       artifactId = "DroidKit"
-      version = "0.9.4"
+      version = "1.0.0"
 
       afterEvaluate {
         from(components["release"])
